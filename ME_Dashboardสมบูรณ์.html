@@ -903,6 +903,39 @@
                         </div>
                     </div>
                     
+                    <!-- ── DB Date Filter Bar ── -->
+                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/60">
+                        <div class="flex flex-wrap items-center gap-3">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-indigo-500 text-sm"></i>
+                                <span class="text-xs font-bold text-slate-600 uppercase tracking-widest">กรองช่วงเวลา</span>
+                            </div>
+                            <div class="flex items-center gap-2 flex-wrap">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <i class="fa-regular fa-calendar text-xs text-indigo-400"></i>
+                                    </div>
+                                    <input type="text" id="dbDateStart" placeholder="วันที่เริ่มต้น"
+                                           class="pl-8 pr-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer font-medium text-slate-700 transition w-38" style="width:148px">
+                                </div>
+                                <span class="text-slate-300 font-bold text-lg leading-none">—</span>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <i class="fa-regular fa-calendar text-xs text-indigo-400"></i>
+                                    </div>
+                                    <input type="text" id="dbDateEnd" placeholder="วันที่สิ้นสุด"
+                                           class="pl-8 pr-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer font-medium text-slate-700 transition" style="width:148px">
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 ml-auto">
+                                <span class="text-xs font-semibold text-indigo-600 bg-indigo-50 border border-indigo-100 px-3 py-1.5 rounded-lg" id="dbRowCount"></span>
+                                <button onclick="resetDbFilter()" class="flex items-center gap-1.5 px-3 py-2 bg-white border border-slate-200 hover:border-red-200 hover:bg-red-50 hover:text-red-500 text-slate-500 rounded-xl text-xs font-bold transition shadow-sm">
+                                    <i class="fa-solid fa-eraser"></i> ล้าง
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-slate-200">
                             <thead class="bg-slate-50/80 backdrop-blur-sm">
@@ -1641,6 +1674,7 @@
         let chartInstances = {};
         let currentView = 'overview';
         let fpStart, fpEnd;
+        let fpDbStart, fpDbEnd, dbDateStart = null, dbDateEnd = null;
         let currentAnalysisType = ''; 
         let currentAnalysisLimit = '5';
         let choicesDrug1 = null; 
@@ -1743,6 +1777,18 @@
 
             fpStart = flatpickr("#filterDateStart", fpConfigGlobal);
             fpEnd = flatpickr("#filterDateEnd", fpConfigGlobal);
+
+            // DB view date pickers
+            const dbOnChange = () => {
+                dbDateStart = fpDbStart.selectedDates[0] || null;
+                dbDateEnd   = fpDbEnd.selectedDates[0]   || null;
+                renderTable();
+            };
+            const fpDbCfg = { dateFormat: 'd/m/Y', locale: 'th', disableMobile: true,
+                              onChange: dbOnChange,
+                              onReady: createCustomButtons(dbOnChange) };
+            fpDbStart = flatpickr('#dbDateStart', fpDbCfg);
+            fpDbEnd   = flatpickr('#dbDateEnd',   fpDbCfg);
 
             document.getElementById('formErrorType').addEventListener('change', autoCheckPreventable);
             document.getElementById('formErrorSubType').addEventListener('change', autoCheckPreventable);
@@ -2371,10 +2417,18 @@
             updateDashboard();
         }
 
+        function resetDbFilter() {
+            if (fpDbStart) fpDbStart.clear();
+            if (fpDbEnd)   fpDbEnd.clear();
+            dbDateStart = null;
+            dbDateEnd   = null;
+            renderTable();
+        }
+
         function resetFilters() {
             document.getElementById('filterLocation').value = 'all';
             document.getElementById('filterSeverity').value = 'all';
-            fpStart.clear(); fpEnd.clear();  
+            fpStart.clear(); fpEnd.clear();
             applyFilters();
         }
 
@@ -3028,8 +3082,23 @@
             const tbody = document.getElementById('dataTableBody');
             const emptyState = document.getElementById('emptyState');
             tbody.innerHTML = '';
-            
-            if (filteredData.length === 0) {
+
+            // Apply db-specific date filter on top of filteredData
+            let dbData = filteredData;
+            if (dbDateStart || dbDateEnd) {
+                dbData = filteredData.filter(row => {
+                    if (!row._dateObj || row._dateObj.getTime() === 0) return false;
+                    const d = new Date(row._dateObj); d.setHours(0, 0, 0, 0);
+                    if (dbDateStart) { const s = new Date(dbDateStart); s.setHours(0,0,0,0); if (d < s) return false; }
+                    if (dbDateEnd)   { const e = new Date(dbDateEnd);   e.setHours(23,59,59,999); if (d > e) return false; }
+                    return true;
+                });
+            }
+
+            const rowCountEl = document.getElementById('dbRowCount');
+            if (rowCountEl) rowCountEl.innerText = `พบ ${dbData.length.toLocaleString()} รายการ`;
+
+            if (dbData.length === 0) {
                 tbody.parentElement.parentElement.classList.add('hidden');
                 emptyState.classList.remove('hidden');
                 return;
@@ -3038,7 +3107,7 @@
             tbody.parentElement.parentElement.classList.remove('hidden');
             emptyState.classList.add('hidden');
 
-            const displayData = filteredData.slice(0, 100);
+            const displayData = dbData.slice(0, 200);
             displayData.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.className = 'hover:bg-brand-50/50 transition duration-200 group';
