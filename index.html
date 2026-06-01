@@ -997,6 +997,11 @@
                                             <i class="fa-solid fa-list-check text-indigo-400"></i> ระดับการจัดการ
                                         </div>
                                     </th>
+                                    <th scope="col" id="thEditAction" class="hidden px-4 py-3.5 text-center text-[10px] font-bold text-emerald-600 uppercase tracking-widest whitespace-nowrap">
+                                        <div class="flex items-center justify-center gap-1.5">
+                                            <i class="fa-solid fa-pen-to-square text-emerald-400"></i> แก้ไข
+                                        </div>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody id="dataTableBody" class="bg-white divide-y divide-slate-100 text-sm">
@@ -1628,6 +1633,123 @@
             <p class="text-slate-500 text-center mb-8 text-sm leading-relaxed" id="modalText"></p>
             <div class="text-center">
                 <button onclick="closeModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white px-4 py-3.5 rounded-xl font-bold transition shadow-md hover:shadow-lg">รับทราบ / ตกลง</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══ Edit Incident Modal (Admin only) ══ -->
+    <div id="editIncidentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[70] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4" onclick="if(event.target===this) closeEditModal()">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl transform scale-95 transition-transform duration-300" id="editIncidentContentBox">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-5 border-b border-emerald-100 rounded-t-2xl" style="background:linear-gradient(135deg,#f0fdf4,#ecfdf5)">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center border border-emerald-200 shadow-sm">
+                        <i class="fa-solid fa-pen-to-square text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-slate-800 leading-tight">แก้ไขข้อมูลอุบัติการณ์</h3>
+                        <p class="text-[11px] text-emerald-600 font-semibold mt-0.5" id="editModalSubtitle">กรอกข้อมูลที่ต้องการแก้ไข</p>
+                    </div>
+                </div>
+                <button onclick="closeEditModal()" class="w-9 h-9 rounded-full flex items-center justify-center bg-white text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition shadow-sm border border-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-5 space-y-4 max-h-[65vh] overflow-y-auto">
+                <input type="hidden" id="editModalRowIdx">
+
+                <!-- Reporting Department -->
+                <div>
+                    <label class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                        <i class="fa-solid fa-building-user text-slate-400"></i> หน่วยงานที่รายงาน
+                    </label>
+                    <div class="relative">
+                        <select id="editReportingDept" class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none font-medium text-slate-700 transition appearance-none">
+                            <option value="">-- เลือกแผนก --</option>
+                            <option value="องค์กรแพทย์">องค์กรแพทย์</option>
+                            <option value="เภสัชกรรม">เภสัชกรรม</option>
+                            <option value="ทันตกรรม">ทันตกรรม</option>
+                            <option value="ER">ER</option>
+                            <option value="OPD">OPD</option>
+                            <option value="ตึกผู้ป่วยในชาย">ตึกผู้ป่วยในชาย</option>
+                            <option value="ตึกผู้ป่วยในหญิง">ตึกผู้ป่วยในหญิง</option>
+                            <option value="LR">LR</option>
+                            <option value="NCD">NCD</option>
+                            <option value="PCC">PCC</option>
+                            <option value="งานยาเสพติด">งานยาเสพติด</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i></div>
+                    </div>
+                </div>
+
+                <!-- Incident Location -->
+                <div>
+                    <label class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                        <i class="fa-solid fa-location-dot text-slate-400"></i> หน่วยงานที่เกิดเหตุ
+                    </label>
+                    <div class="relative">
+                        <select id="editIncidentLocation" class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none font-medium text-slate-700 transition appearance-none">
+                            <option value="">-- เลือกสถานที่ --</option>
+                            <option value="องค์กรแพทย์">องค์กรแพทย์</option>
+                            <option value="เภสัชกรรม">เภสัชกรรม</option>
+                            <option value="ทันตกรรม">ทันตกรรม</option>
+                            <option value="ER">ER</option>
+                            <option value="OPD">OPD</option>
+                            <option value="ตึกผู้ป่วยในชาย">ตึกผู้ป่วยในชาย</option>
+                            <option value="ตึกผู้ป่วยในหญิง">ตึกผู้ป่วยในหญิง</option>
+                            <option value="LR">LR</option>
+                            <option value="NCD">NCD</option>
+                            <option value="PCC">PCC</option>
+                            <option value="งานยาเสพติด">งานยาเสพติด</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i></div>
+                    </div>
+                </div>
+
+                <!-- Drug Name 1 -->
+                <div>
+                    <label class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                        <i class="fa-solid fa-pills text-blue-400"></i> ชื่อยาที่เกี่ยวข้อง (1)
+                    </label>
+                    <input type="text" id="editDrugName1"
+                           class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none font-medium text-slate-700 transition"
+                           placeholder="ชื่อยาตัวที่ 1">
+                </div>
+
+                <!-- Drug Name 2 -->
+                <div>
+                    <label class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                        <i class="fa-solid fa-pills text-orange-400"></i> ชื่อยาที่เกี่ยวข้อง (2)
+                        <span class="normal-case font-normal text-slate-400 ml-1">กรณี LASA / สลับยา</span>
+                    </label>
+                    <input type="text" id="editDrugName2"
+                           class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none font-medium text-slate-700 transition"
+                           placeholder="ชื่อยาตัวที่ 2 (ถ้ามี)">
+                </div>
+
+                <!-- Incident Details -->
+                <div>
+                    <label class="flex items-center gap-1.5 text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
+                        <i class="fa-solid fa-file-lines text-slate-400"></i> รายละเอียดเหตุการณ์
+                    </label>
+                    <textarea id="editIncidentDetails" rows="3"
+                              class="w-full px-3 py-2.5 text-sm rounded-xl border border-slate-200 bg-slate-50 hover:border-emerald-300 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 outline-none font-medium text-slate-700 transition resize-none"
+                              placeholder="รายละเอียดเหตุการณ์ที่เกิดขึ้น..."></textarea>
+                </div>
+            </div>
+            <!-- Footer -->
+            <div class="flex items-center gap-3 px-5 pb-5 pt-2 border-t border-slate-100">
+                <button onclick="closeEditModal()"
+                        class="flex-1 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-xl text-sm font-bold transition">
+                    ยกเลิก
+                </button>
+                <button onclick="saveEditModal()" id="btnSaveEdit"
+                        class="flex-1 px-4 py-2.5 text-white rounded-xl text-sm font-bold transition flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg"
+                        style="background:linear-gradient(135deg,#059669,#0d9488);box-shadow:0 4px 16px rgba(5,150,105,.3)">
+                    <i class="fa-solid fa-floppy-disk" id="saveEditIcon"></i>
+                    <span id="saveEditText">บันทึกการแก้ไข</span>
+                </button>
             </div>
         </div>
     </div>
@@ -3179,10 +3301,12 @@
             const emptyState = document.getElementById('emptyState');
             tbody.innerHTML = '';
 
-            // Show/hide Management Level column based on role
+            // Show/hide Admin-only columns based on role
             const isAdminUser = isAuthenticated && userRole.toLowerCase().trim() === 'admin';
             const thMgmt = document.getElementById('thMgmtLevel');
             if (thMgmt) thMgmt.classList.toggle('hidden', !isAdminUser);
+            const thEdit = document.getElementById('thEditAction');
+            if (thEdit) thEdit.classList.toggle('hidden', !isAdminUser);
 
             // Show/hide Management Level filter (Admin only)
             const mgmtFilterWrap = document.getElementById('dbMgmtFilterWrap');
@@ -3269,6 +3393,15 @@
                         </td>`;
                 }
 
+                // Edit button cell (Admin only)
+                const editTd = isAdminUser ? `
+                    <td class="px-4 py-3 text-center">
+                        <button onclick="openEditModal(${rowIdx})"
+                                class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 hover:border-emerald-400 rounded-lg text-[11px] font-bold transition shadow-sm hover:-translate-y-0.5">
+                            <i class="fa-solid fa-pen-to-square text-[10px]"></i> แก้ไข
+                        </button>
+                    </td>` : '';
+
                 const drug1 = (row['Drug_Name1'] || '').toString().trim();
                 const drug2 = (row['Drug_Name2'] || '').toString().trim();
                 const hasDrug2 = drug2 && drug2 !== '-';
@@ -3307,6 +3440,7 @@
                         </div>
                     </td>
                     ${mgmtTd}
+                    ${editTd}
                 `;
                 tbody.appendChild(tr);
             });
@@ -4402,6 +4536,100 @@ Matched Keywords:
                 btn.disabled = false;
                 btnText.innerText = 'ให้ AI ช่วยวิเคราะห์ประเภท';
                 btnIcon.className = 'fa-solid fa-wand-magic-sparkles mr-2';
+            }
+        }
+
+        /* ══════════════════════════════════════════
+           EDIT INCIDENT MODAL (Admin only)
+        ══════════════════════════════════════════ */
+        function openEditModal(rowIdx) {
+            const row = allData[rowIdx];
+            if (!row) return;
+
+            document.getElementById('editModalRowIdx').value = rowIdx;
+            document.getElementById('editModalSubtitle').innerText =
+                `วันที่: ${row['Incident_Date'] || '-'} · ${row['Error_Type'] || '-'}`;
+
+            document.getElementById('editReportingDept').value    = row['Reporting_Department'] || '';
+            document.getElementById('editIncidentLocation').value = row['Incident_Location']    || '';
+            document.getElementById('editDrugName1').value        = row['Drug_Name1']           || '';
+            document.getElementById('editDrugName2').value        = row['Drug_Name2']           || '';
+            document.getElementById('editIncidentDetails').value  = row['Incident_Details']     || '';
+
+            const modal = document.getElementById('editIncidentModal');
+            const box   = document.getElementById('editIncidentContentBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeEditModal() {
+            const modal = document.getElementById('editIncidentModal');
+            const box   = document.getElementById('editIncidentContentBox');
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        async function saveEditModal() {
+            const rowIdx = parseInt(document.getElementById('editModalRowIdx').value);
+            const row = allData[rowIdx];
+            if (!row) return;
+
+            const updatedFields = {
+                Reporting_Department: document.getElementById('editReportingDept').value.trim(),
+                Incident_Location:    document.getElementById('editIncidentLocation').value.trim(),
+                Drug_Name1:           document.getElementById('editDrugName1').value.trim(),
+                Drug_Name2:           document.getElementById('editDrugName2').value.trim(),
+                Incident_Details:     document.getElementById('editIncidentDetails').value.trim(),
+            };
+
+            const btn  = document.getElementById('btnSaveEdit');
+            const icon = document.getElementById('saveEditIcon');
+            const txt  = document.getElementById('saveEditText');
+            btn.disabled = true; btn.style.opacity = '0.7';
+            icon.className = 'fa-solid fa-spinner fa-spin';
+            txt.innerText = 'กำลังบันทึก...';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action:               'updateIncidentRecord',
+                        _rowIndex:            row._rowIndex,
+                        Incident_Date:        row['Incident_Date']        || '',
+                        Incident_Location:    row['Incident_Location']    || '',
+                        Reporting_Department: row['Reporting_Department'] || '',
+                        Error_Type:           row['Error_Type']           || '',
+                        Severity_Level:       row['Severity_Level']       || '',
+                        Drug_Name1:           updatedFields.Drug_Name1,
+                        Drug_Name2:           updatedFields.Drug_Name2,
+                        Incident_Details:     updatedFields.Incident_Details,
+                        New_Incident_Location:    updatedFields.Incident_Location,
+                        New_Reporting_Department: updatedFields.Reporting_Department,
+                    })
+                });
+                const responseText = await response.text();
+                let result;
+                try { result = JSON.parse(responseText); } catch(e) { throw new Error('Response not JSON'); }
+                if (result.status !== 'success') throw new Error(result.message || 'Update failed');
+
+                // Persist changes locally so table re-renders correctly
+                Object.assign(row, updatedFields);
+                closeEditModal();
+                renderTable();
+                showMessage('แก้ไขสำเร็จ', 'บันทึกข้อมูลที่แก้ไขเรียบร้อยแล้ว', 'success');
+            } catch(e) {
+                showMessage('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกการแก้ไขได้: ' + e.message, 'error');
+            } finally {
+                btn.disabled = false; btn.style.opacity = '1';
+                icon.className = 'fa-solid fa-floppy-disk';
+                txt.innerText = 'บันทึกการแก้ไข';
             }
         }
 
