@@ -383,8 +383,13 @@
                                 <i class="fa-solid fa-percent text-2xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-xs font-medium" style="color:rgba(255,255,255,.7)">
-                            <span class="px-2 py-0.5 rounded mr-2 font-bold" style="background:rgba(255,255,255,.2);color:#fff">Rate</span> ต่อ 1,000 ใบสั่งยา
+                        <div class="mt-4 flex items-center justify-between text-xs font-medium" style="color:rgba(255,255,255,.7)">
+                            <div class="flex items-center">
+                                <span class="px-2 py-0.5 rounded mr-2 font-bold" style="background:rgba(255,255,255,.2);color:#fff">Rate</span> ต่อ 1,000 ใบสั่งยา
+                            </div>
+                            <button onclick="openOPDRateDrillDownModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 hover:scale-105 active:scale-95 z-10 relative" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px)" title="เจาะลึกตาม Error Type">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i> เจาะลึก
+                            </button>
                         </div>
                     </div>
 
@@ -421,8 +426,13 @@
                                 <i class="fa-solid fa-chart-area text-2xl"></i>
                             </div>
                         </div>
-                        <div class="mt-4 flex items-center text-xs font-medium" style="color:rgba(255,255,255,.7)">
-                            <span class="px-2 py-0.5 rounded mr-2 font-bold" style="background:rgba(255,255,255,.2);color:#fff">Rate</span> ต่อ 1,000 วันนอน
+                        <div class="mt-4 flex items-center justify-between text-xs font-medium" style="color:rgba(255,255,255,.7)">
+                            <div class="flex items-center">
+                                <span class="px-2 py-0.5 rounded mr-2 font-bold" style="background:rgba(255,255,255,.2);color:#fff">Rate</span> ต่อ 1,000 วันนอน
+                            </div>
+                            <button onclick="openIPDRateDrillDownModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 hover:scale-105 active:scale-95 z-10 relative" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px)" title="เจาะลึกตาม Error Type">
+                                <i class="fa-solid fa-magnifying-glass-chart"></i> เจาะลึก
+                            </button>
                         </div>
                     </div>
 
@@ -894,9 +904,23 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-3 w-full sm:w-auto">
-                            <span class="hidden md:flex bg-slate-50 text-slate-600 text-xs font-bold px-4 py-2 rounded-lg border border-slate-200 shadow-sm items-center">
-                                <i class="fa-solid fa-layer-group mr-2 text-slate-400"></i> แสดง 100 รายการล่าสุด
-                            </span>
+                            <div class="hidden md:flex items-center gap-2">
+                                <i class="fa-solid fa-layer-group text-slate-400 text-sm"></i>
+                                <span class="text-xs font-bold text-slate-500">แสดง</span>
+                                <div class="relative">
+                                    <select id="dbDisplayLimitSelect"
+                                            onchange="dbDisplayLimit = this.value === 'all' ? Infinity : parseInt(this.value); renderTable()"
+                                            class="pl-3 pr-7 py-1.5 text-xs font-bold rounded-lg border border-slate-200 bg-white hover:border-indigo-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 outline-none cursor-pointer text-slate-700 transition appearance-none shadow-sm">
+                                        <option value="20" selected>20 รายการ</option>
+                                        <option value="30">30 รายการ</option>
+                                        <option value="50">50 รายการ</option>
+                                        <option value="all">ทั้งหมด</option>
+                                    </select>
+                                    <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                                        <i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i>
+                                    </div>
+                                </div>
+                            </div>
                             <button onclick="handleLogout()" class="px-4 py-2 bg-slate-50 text-slate-600 hover:bg-red-50 hover:text-danger border border-slate-200 hover:border-red-200 rounded-lg text-sm font-bold transition flex items-center shadow-sm ml-auto">
                                 <i class="fa-solid fa-right-from-bracket mr-2"></i> ออกจากระบบ
                             </button>
@@ -932,6 +956,22 @@
 
                         <!-- Row 2: Category filters + actions -->
                         <div class="flex flex-wrap items-center gap-3">
+
+                            <!-- ── Location filter (all users) ── -->
+                            <div class="flex items-center gap-2 flex-shrink-0">
+                                <i class="fa-solid fa-location-dot text-emerald-500 text-sm"></i>
+                                <span class="text-xs font-bold text-slate-600 uppercase tracking-widest">สถานที่เกิดเหตุ</span>
+                            </div>
+                            <div class="relative flex-shrink-0">
+                                <select id="dbLocationFilter"
+                                        onchange="dbLocationFilter=this.value; renderTable()"
+                                        class="pl-3 pr-7 py-2 text-sm rounded-xl border border-emerald-200 bg-white hover:border-emerald-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 outline-none cursor-pointer font-medium text-slate-700 transition appearance-none" style="min-width:160px">
+                                    <option value="all">ทั้งหมด (All Locations)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-2 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-chevron-down text-[9px] text-emerald-400"></i>
+                                </div>
+                            </div>
 
                             <!-- ── Error Type filter (all users) ── -->
                             <div class="flex items-center gap-2 flex-shrink-0">
@@ -1095,6 +1135,7 @@
                                         <option value="NCD">NCD</option>
                                         <option value="PCC">PCC</option>
                                         <option value="งานยาเสพติด">งานยาเสพติด</option>
+                                        <option value="COC">COC</option>
                                     </select>
                                 </div>
                                 <div class="md:col-span-2">
@@ -1112,6 +1153,7 @@
                                         <option value="NCD">NCD</option>
                                         <option value="PCC">PCC</option>
                                         <option value="งานยาเสพติด">งานยาเสพติด</option>
+                                        <option value="COC">COC</option>
                                     </select>
                                 </div>
                             </div>
@@ -1509,6 +1551,93 @@
                     </div>
                 </div>
 
+                <!-- AI Filter Card -->
+                <div class="relative overflow-hidden rounded-2xl p-5"
+                     style="background:linear-gradient(135deg,#faf5ff 0%,#ffffff 50%,#fdf4ff 100%);border:1.5px solid #ddd6fe;box-shadow:0 4px 20px rgba(124,58,237,.1)">
+                    <div class="absolute -top-8 -right-8 w-36 h-36 rounded-full pointer-events-none"
+                         style="background:radial-gradient(circle,rgba(124,58,237,.1) 0%,transparent 70%)"></div>
+                    <!-- header -->
+                    <div class="flex items-center justify-between mb-4 relative z-10">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-xl flex items-center justify-center"
+                                 style="background:linear-gradient(135deg,#7c3aed,#a78bfa);box-shadow:0 4px 12px rgba(124,58,237,.3)">
+                                <i class="fa-solid fa-filter text-white text-sm"></i>
+                            </div>
+                            <div>
+                                <h2 class="text-sm font-extrabold" style="color:#4c1d95">ตัวกรองข้อมูลสำหรับ AI</h2>
+                                <p class="text-[11px] font-semibold" style="color:#8b5cf6">เลือกช่วงเวลา / สถานที่ที่ต้องการให้ AI วิเคราะห์</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold px-3 py-1.5 rounded-lg" style="background:#ede9fe;color:#5b21b6;border:1px solid #ddd6fe" id="aiFilterCount">— รายการ</span>
+                            <button onclick="resetAIFilter()"
+                                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all hover:-translate-y-0.5"
+                                    style="background:#fff1f2;border:1px solid #fecdd3;color:#e11d48">
+                                <i class="fa-solid fa-eraser"></i> ล้าง
+                            </button>
+                        </div>
+                    </div>
+                    <!-- filters row -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 relative z-10">
+                        <!-- Date range -->
+                        <div class="md:col-span-2">
+                            <label class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest mb-2" style="color:#7c3aed">
+                                <i class="fa-solid fa-calendar-days"></i> ช่วงวันที่ (จาก – ถึง)
+                            </label>
+                            <div class="flex items-center gap-2">
+                                <div class="relative flex-1">
+                                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <i class="fa-regular fa-calendar text-xs" style="color:#8b5cf6"></i>
+                                    </div>
+                                    <input type="text" id="aiFilterDateStart" placeholder="วันที่เริ่มต้น"
+                                           class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl font-medium transition cursor-pointer"
+                                           style="border:1.5px solid #ddd6fe;background:#fff;color:#312e81;outline:none"
+                                           onfocus="this.style.borderColor='#7c3aed';this.style.boxShadow='0 0 0 3px rgba(124,58,237,.12)'"
+                                           onblur="this.style.borderColor='#ddd6fe';this.style.boxShadow='none'">
+                                </div>
+                                <div class="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0"
+                                     style="background:#ede9fe;border:1px solid #ddd6fe">
+                                    <i class="fa-solid fa-arrow-right text-[8px]" style="color:#7c3aed"></i>
+                                </div>
+                                <div class="relative flex-1">
+                                    <div class="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                                        <i class="fa-regular fa-calendar text-xs" style="color:#8b5cf6"></i>
+                                    </div>
+                                    <input type="text" id="aiFilterDateEnd" placeholder="วันที่สิ้นสุด"
+                                           class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl font-medium transition cursor-pointer"
+                                           style="border:1.5px solid #ddd6fe;background:#fff;color:#312e81;outline:none"
+                                           onfocus="this.style.borderColor='#7c3aed';this.style.boxShadow='0 0 0 3px rgba(124,58,237,.12)'"
+                                           onblur="this.style.borderColor='#ddd6fe';this.style.boxShadow='none'">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Location -->
+                        <div>
+                            <label class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest mb-2" style="color:#7c3aed">
+                                <i class="fa-solid fa-location-dot"></i> สถานที่เกิดเหตุ
+                            </label>
+                            <div class="relative">
+                                <select id="aiLocationFilter"
+                                        onchange="aiFilterLocation=this.value; updateAIFilterCount()"
+                                        class="w-full px-3 pr-8 py-2.5 text-sm rounded-xl font-medium cursor-pointer appearance-none transition"
+                                        style="border:1.5px solid #ddd6fe;background:#fff;color:#312e81;outline:none"
+                                        onfocus="this.style.borderColor='#7c3aed';this.style.boxShadow='0 0 0 3px rgba(124,58,237,.12)'"
+                                        onblur="this.style.borderColor='#ddd6fe';this.style.boxShadow='none'">
+                                    <option value="all">ทั้งหมด (All Locations)</option>
+                                </select>
+                                <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                    <i class="fa-solid fa-chevron-down text-[9px]" style="color:#8b5cf6"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- hint -->
+                    <p class="text-[11px] mt-3 relative z-10 flex items-center gap-1.5" style="color:#a78bfa">
+                        <i class="fa-solid fa-circle-info"></i>
+                        หากไม่เลือกช่วงเวลา AI จะวิเคราะห์ข้อมูลทั้งหมดในระบบ (แยกจากตัวกรองหน้า Overview)
+                    </p>
+                </div>
+
                 <!-- Generate Card -->
                 <div class="rounded-2xl p-6" style="background:#fff;border:1.5px solid #e0e7ff;box-shadow:0 4px 24px rgba(99,102,241,.07)">
                     <div class="flex items-center justify-between mb-5">
@@ -1678,6 +1807,7 @@
                             <option value="NCD">NCD</option>
                             <option value="PCC">PCC</option>
                             <option value="งานยาเสพติด">งานยาเสพติด</option>
+                            <option value="COC">COC</option>
                         </select>
                         <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i></div>
                     </div>
@@ -1702,6 +1832,7 @@
                             <option value="NCD">NCD</option>
                             <option value="PCC">PCC</option>
                             <option value="งานยาเสพติด">งานยาเสพติด</option>
+                            <option value="COC">COC</option>
                         </select>
                         <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none"><i class="fa-solid fa-chevron-down text-[9px] text-slate-400"></i></div>
                     </div>
@@ -1779,6 +1910,56 @@
         </div>
     </div>
 
+    <!-- OPD Rate Drill-down Modal (เจาะลึกอัตราความคลาดเคลื่อน OPD ตาม Error Type) -->
+    <div id="opdRateDrillDownModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4 sm:p-6" onclick="if(event.target===this) closeOPDRateDrillDownModal()">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[88vh] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col" id="opdRateDrillDownContentBox">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-5 border-b border-sky-900/20 bg-gradient-to-r from-sky-800 to-sky-600 rounded-t-2xl flex-shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/15 text-white flex items-center justify-center shadow-sm border border-white/20 flex-shrink-0">
+                        <i class="fa-solid fa-magnifying-glass-chart text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white leading-tight" id="opdRateDrillDownTitle">เจาะลึกอัตราความคลาดเคลื่อน OPD ตาม Error Type</h3>
+                        <p class="text-sm font-semibold text-sky-200 mt-0.5" id="opdRateDrillDownSubtitle">กำลังโหลด...</p>
+                    </div>
+                </div>
+                <button onclick="closeOPDRateDrillDownModal()" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white hover:bg-white/25 transition border border-white/20 flex-shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-5 md:p-6 overflow-y-auto flex-1 bg-slate-50" id="opdRateDrillDownBody">
+                <!-- injected by openOPDRateDrillDownModal() -->
+            </div>
+        </div>
+    </div>
+
+    <!-- IPD Rate Drill-down Modal (เจาะลึกอัตราความคลาดเคลื่อน IPD ตาม Error Type) -->
+    <div id="ipdRateDrillDownModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4 sm:p-6" onclick="if(event.target===this) closeIPDRateDrillDownModal()">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[88vh] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col" id="ipdRateDrillDownContentBox">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-5 border-b border-indigo-900/20 bg-gradient-to-r from-indigo-800 to-violet-700 rounded-t-2xl flex-shrink-0">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-white/15 text-white flex items-center justify-center shadow-sm border border-white/20 flex-shrink-0">
+                        <i class="fa-solid fa-magnifying-glass-chart text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white leading-tight" id="ipdRateDrillDownTitle">อัตราความคลาดเคลื่อน IPD ตาม Error Type</h3>
+                        <p class="text-sm font-semibold text-indigo-200 mt-0.5" id="ipdRateDrillDownSubtitle">กำลังโหลด...</p>
+                    </div>
+                </div>
+                <button onclick="closeIPDRateDrillDownModal()" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white hover:bg-white/25 transition border border-white/20 flex-shrink-0">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-5 md:p-6 overflow-y-auto flex-1 bg-slate-50" id="ipdRateDrillDownBody">
+                <!-- injected by openIPDRateDrillDownModal() -->
+            </div>
+        </div>
+    </div>
+
     <!-- Drill-down Modal (เจาะลึกความรุนแรง E-I) -->
     <div id="drillDownModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4 sm:p-6">
         <div class="bg-white rounded-2xl w-full max-w-3xl max-h-[85vh] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col" id="drillDownContentBox">
@@ -1850,8 +2031,12 @@
         let currentView = 'overview';
         let fpStart, fpEnd;
         let fpDbStart, fpDbEnd, dbDateStart = null, dbDateEnd = null;
+        let fpAiStart, fpAiEnd, aiFilterDateStart = null, aiFilterDateEnd = null;
+        let aiFilterLocation = 'all';
         let dbErrorTypeFilter = 'all';
         let dbMgmtLevelFilter = 'all';
+        let dbDisplayLimit = 20;
+        let dbLocationFilter = 'all';
         let currentAnalysisType = ''; 
         let currentAnalysisLimit = '5';
         let choicesDrug1 = null; 
@@ -1966,6 +2151,18 @@
                               onReady: createCustomButtons(dbOnChange) };
             fpDbStart = flatpickr('#dbDateStart', fpDbCfg);
             fpDbEnd   = flatpickr('#dbDateEnd',   fpDbCfg);
+
+            // AI Summary date pickers
+            const aiOnChange = () => {
+                aiFilterDateStart = fpAiStart.selectedDates[0] || null;
+                aiFilterDateEnd   = fpAiEnd.selectedDates[0]   || null;
+                updateAIFilterCount();
+            };
+            const fpAiCfg = { dateFormat: 'd/m/Y', locale: 'th', disableMobile: true,
+                              onChange: aiOnChange,
+                              onReady: createCustomButtons(aiOnChange) };
+            fpAiStart = flatpickr('#aiFilterDateStart', fpAiCfg);
+            fpAiEnd   = flatpickr('#aiFilterDateEnd',   fpAiCfg);
 
             document.getElementById('formErrorType').addEventListener('change', autoCheckPreventable);
             document.getElementById('formErrorSubType').addEventListener('change', autoCheckPreventable);
@@ -2253,7 +2450,12 @@
         // UI Updates & Filters
         // ---------------------------------------------------------
         function populateFilterOptions() {
-            const locations = new Set();
+            const FIXED_LOCATIONS = [
+                'องค์กรแพทย์','เภสัชกรรม','ทันตกรรม','ER','OPD',
+                'ตึกผู้ป่วยในชาย','ตึกผู้ป่วยในหญิง','LR','NCD','PCC',
+                'งานยาเสพติด','COC'
+            ];
+            const locations = new Set(FIXED_LOCATIONS);
             allData.forEach(row => {
                 if(row['Incident_Location']) locations.add(row['Incident_Location']);
             });
@@ -2263,6 +2465,26 @@
             Array.from(locations).sort().forEach(loc => {
                 locSelect.innerHTML += `<option value="${loc}">${loc}</option>`;
             });
+
+            // Populate DB Location filter dropdown
+            const dbLocSel = document.getElementById('dbLocationFilter');
+            if (dbLocSel) {
+                dbLocSel.innerHTML = '<option value="all">ทั้งหมด (All Locations)</option>';
+                Array.from(locations).sort().forEach(loc => {
+                    dbLocSel.innerHTML += `<option value="${loc}">${loc}</option>`;
+                });
+                dbLocSel.value = dbLocationFilter;
+            }
+
+            // Populate AI Location filter dropdown
+            const aiLocSel = document.getElementById('aiLocationFilter');
+            if (aiLocSel) {
+                aiLocSel.innerHTML = '<option value="all">ทั้งหมด (All Locations)</option>';
+                Array.from(locations).sort().forEach(loc => {
+                    aiLocSel.innerHTML += `<option value="${loc}">${loc}</option>`;
+                });
+                aiLocSel.value = aiFilterLocation;
+            }
 
             // Populate DB Error Type filter dropdown
             const dbEtSel = document.getElementById('dbErrorTypeFilter');
@@ -2275,6 +2497,8 @@
                 });
                 dbEtSel.value = dbErrorTypeFilter;
             }
+
+            updateAIFilterCount();
         }
         
         function populateErrorTypeDropdown(configList) {
@@ -2613,10 +2837,16 @@
             dbDateEnd   = null;
             dbErrorTypeFilter = 'all';
             dbMgmtLevelFilter = 'all';
+            dbDisplayLimit = 20;
+            dbLocationFilter = 'all';
             const etSel = document.getElementById('dbErrorTypeFilter');
             if (etSel) etSel.value = 'all';
             const mlSel = document.getElementById('dbMgmtLevelFilter');
             if (mlSel) mlSel.value = 'all';
+            const limSel = document.getElementById('dbDisplayLimitSelect');
+            if (limSel) limSel.value = '20';
+            const locFiltSel = document.getElementById('dbLocationFilter');
+            if (locFiltSel) locFiltSel.value = 'all';
             renderTable();
         }
 
@@ -3324,6 +3554,11 @@
                 });
             }
 
+            // Apply Location filter (all users)
+            if (dbLocationFilter !== 'all') {
+                dbData = dbData.filter(row => (row['Incident_Location'] || '').toString().trim() === dbLocationFilter);
+            }
+
             // Apply Error Type filter (all users)
             if (dbErrorTypeFilter !== 'all') {
                 dbData = dbData.filter(row => (row['Error_Type'] || '').toString().trim() === dbErrorTypeFilter);
@@ -3346,7 +3581,7 @@
             tbody.parentElement.parentElement.classList.remove('hidden');
             emptyState.classList.add('hidden');
 
-            const displayData = dbData.slice(0, 200);
+            const displayData = dbDisplayLimit === Infinity ? dbData : dbData.slice(0, dbDisplayLimit);
             displayData.forEach(row => {
                 const rowIdx = allData.indexOf(row);
                 const tr = document.createElement('tr');
@@ -3962,6 +4197,282 @@
         }
 
         /* ══════════════════════════════════════════
+           OPD RATE DRILL-DOWN MODAL (เจาะลึกอัตราตาม Error Type)
+        ══════════════════════════════════════════ */
+        function openOPDRateDrillDownModal() {
+            const opdData = filteredData.filter(r => (r['Department_Type'] || '').toString().trim().toUpperCase() === 'OPD');
+
+            // รวบรวมเดือนที่มีใน filteredData
+            const filterMonths = new Set();
+            filteredData.forEach(row => {
+                if (row._dateObj && row._dateObj.getTime() !== 0) {
+                    filterMonths.add(`${row._dateObj.getFullYear()}-${String(row._dateObj.getMonth()+1).padStart(2,'0')}`);
+                }
+            });
+
+            // หาจำนวนใบสั่งยา OPD ในช่วงเวลาที่เลือก
+            const activeMonthsArray = Array.from(filterMonths);
+            let totalOPDVisits = 0;
+            monthlyStatsData.forEach(s => {
+                if (activeMonthsArray.includes(s._month) || activeMonthsArray.length === 0) {
+                    totalOPDVisits += s._opd;
+                }
+            });
+
+            // จัดกลุ่มตาม Error_Type
+            const typeMap = {};
+            opdData.forEach(r => {
+                const type = ((r['Error_Type'] || '').toString().trim()) || 'ไม่ระบุ';
+                typeMap[type] = (typeMap[type] || 0) + 1;
+            });
+
+            // คำนวณอัตราและเรียงลำดับ
+            const rows = Object.entries(typeMap).map(([type, count]) => ({
+                type,
+                count,
+                rate: totalOPDVisits > 0 ? (count / totalOPDVisits) * 1000 : 0
+            })).sort((a, b) => b.rate - a.rate);
+
+            document.getElementById('opdRateDrillDownTitle').innerText = `อัตราความคลาดเคลื่อน OPD ตาม Error Type`;
+            document.getElementById('opdRateDrillDownSubtitle').innerText =
+                totalOPDVisits > 0
+                    ? `พบ ${opdData.length} เคส จาก ${totalOPDVisits.toLocaleString()} ใบสั่งยา OPD`
+                    : `พบ ${opdData.length} เคส (ไม่มีข้อมูลจำนวนใบสั่งยา)`;
+
+            const body = document.getElementById('opdRateDrillDownBody');
+
+            if (opdData.length === 0) {
+                body.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-14 text-center">
+                        <div class="w-20 h-20 bg-sky-50 text-sky-400 rounded-full flex items-center justify-center mb-5 text-4xl shadow-sm border border-sky-100">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-700">ไม่มีข้อมูล OPD ในช่วงนี้</h4>
+                        <p class="text-sm text-slate-500 mt-2 max-w-sm">ไม่พบอุบัติการณ์ OPD ในช่วงเวลาหรือสถานที่ที่เลือก</p>
+                    </div>`;
+                _showOPDRateModal();
+                return;
+            }
+
+            const colorPalette = [
+                ['from-sky-500','to-cyan-400'],
+                ['from-blue-500','to-sky-400'],
+                ['from-indigo-500','to-blue-400'],
+                ['from-violet-500','to-indigo-400'],
+                ['from-teal-500','to-emerald-400'],
+                ['from-cyan-600','to-teal-400'],
+                ['from-purple-500','to-violet-400'],
+                ['from-fuchsia-500','to-purple-400'],
+            ];
+
+            const maxRate = rows[0]?.rate || 1;
+            let html = `
+                <div class="mb-4 p-3 bg-sky-50 rounded-xl border border-sky-100 flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-info text-sky-500 text-sm flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-sky-700 font-medium">อัตราคำนวณจากจำนวนอุบัติการณ์ OPD ของแต่ละ Error Type หารด้วยจำนวนใบสั่งยา OPD ทั้งหมดในช่วงเวลาที่เลือก</p>
+                </div>
+                <div class="space-y-3">`;
+
+            rows.forEach((row, idx) => {
+                const pct = maxRate > 0 ? (row.rate / maxRate) * 100 : 0;
+                const [c1, c2] = colorPalette[idx % colorPalette.length];
+                html += `
+                    <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-br ${c1} ${c2} text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 shadow-sm">${idx + 1}</span>
+                                <p class="font-bold text-slate-800 text-sm truncate" title="${row.type}">${row.type}</p>
+                            </div>
+                            <div class="flex items-center gap-4 flex-shrink-0 ml-3">
+                                <div class="text-center">
+                                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none mb-0.5">เคส OPD</div>
+                                    <div class="text-lg font-black text-slate-700 num-font leading-none">${row.count}</div>
+                                </div>
+                                <div class="text-center min-w-[90px]">
+                                    <div class="text-[9px] text-sky-500 font-bold uppercase tracking-wide leading-none mb-0.5">ต่อ 1,000 ใบสั่งยา</div>
+                                    <div class="text-lg font-black text-sky-700 num-font leading-none">${totalOPDVisits > 0 ? row.rate.toFixed(3) : '-'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="h-2 rounded-full bg-gradient-to-r ${c1} ${c2} transition-all duration-700" style="width:${pct.toFixed(1)}%"></div>
+                        </div>
+                    </div>`;
+            });
+
+            html += `</div>`;
+
+            if (totalOPDVisits === 0) {
+                html += `
+                <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-2.5">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-amber-700 font-medium">ไม่มีข้อมูลจำนวนใบสั่งยา OPD — แสดงเฉพาะจำนวนเคสแต่ละประเภท ไม่สามารถคำนวณอัตราได้</p>
+                </div>`;
+            }
+
+            body.innerHTML = html;
+            _showOPDRateModal();
+        }
+
+        function _showOPDRateModal() {
+            const modal = document.getElementById('opdRateDrillDownModal');
+            const box   = document.getElementById('opdRateDrillDownContentBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeOPDRateDrillDownModal() {
+            const modal = document.getElementById('opdRateDrillDownModal');
+            const box   = document.getElementById('opdRateDrillDownContentBox');
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        /* ══════════════════════════════════════════
+           IPD RATE DRILL-DOWN MODAL (เจาะลึกอัตราตาม Error Type)
+        ══════════════════════════════════════════ */
+        function openIPDRateDrillDownModal() {
+            const ipdData = filteredData.filter(r => (r['Department_Type'] || '').toString().trim().toUpperCase() === 'IPD');
+
+            // รวบรวมเดือนที่มีใน filteredData
+            const filterMonths = new Set();
+            filteredData.forEach(row => {
+                if (row._dateObj && row._dateObj.getTime() !== 0) {
+                    filterMonths.add(`${row._dateObj.getFullYear()}-${String(row._dateObj.getMonth()+1).padStart(2,'0')}`);
+                }
+            });
+
+            // หาจำนวนวันนอน IPD ในช่วงเวลาที่เลือก
+            const activeMonthsArray = Array.from(filterMonths);
+            let totalIPDDays = 0;
+            monthlyStatsData.forEach(s => {
+                if (activeMonthsArray.includes(s._month) || activeMonthsArray.length === 0) {
+                    totalIPDDays += s._ipd;
+                }
+            });
+
+            // จัดกลุ่มตาม Error_Type
+            const typeMap = {};
+            ipdData.forEach(r => {
+                const type = ((r['Error_Type'] || '').toString().trim()) || 'ไม่ระบุ';
+                typeMap[type] = (typeMap[type] || 0) + 1;
+            });
+
+            // คำนวณอัตราและเรียงลำดับ
+            const rows = Object.entries(typeMap).map(([type, count]) => ({
+                type,
+                count,
+                rate: totalIPDDays > 0 ? (count / totalIPDDays) * 1000 : 0
+            })).sort((a, b) => b.rate - a.rate);
+
+            document.getElementById('ipdRateDrillDownTitle').innerText = `อัตราความคลาดเคลื่อน IPD ตาม Error Type`;
+            document.getElementById('ipdRateDrillDownSubtitle').innerText =
+                totalIPDDays > 0
+                    ? `พบ ${ipdData.length} เคส จาก ${totalIPDDays.toLocaleString()} วันนอน IPD`
+                    : `พบ ${ipdData.length} เคส (ไม่มีข้อมูลจำนวนวันนอน)`;
+
+            const body = document.getElementById('ipdRateDrillDownBody');
+
+            if (ipdData.length === 0) {
+                body.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-14 text-center">
+                        <div class="w-20 h-20 bg-indigo-50 text-indigo-400 rounded-full flex items-center justify-center mb-5 text-4xl shadow-sm border border-indigo-100">
+                            <i class="fa-solid fa-shield-check"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-700">ไม่มีข้อมูล IPD ในช่วงนี้</h4>
+                        <p class="text-sm text-slate-500 mt-2 max-w-sm">ไม่พบอุบัติการณ์ IPD ในช่วงเวลาหรือสถานที่ที่เลือก</p>
+                    </div>`;
+                _showIPDRateModal();
+                return;
+            }
+
+            const colorPalette = [
+                ['from-indigo-500','to-violet-400'],
+                ['from-violet-500','to-purple-400'],
+                ['from-purple-500','to-fuchsia-400'],
+                ['from-fuchsia-500','to-pink-400'],
+                ['from-blue-500','to-indigo-400'],
+                ['from-slate-500','to-indigo-400'],
+                ['from-pink-500','to-rose-400'],
+                ['from-rose-500','to-red-400'],
+            ];
+
+            const maxRate = rows[0]?.rate || 1;
+            let html = `
+                <div class="mb-4 p-3 bg-indigo-50 rounded-xl border border-indigo-100 flex items-start gap-2.5">
+                    <i class="fa-solid fa-circle-info text-indigo-500 text-sm flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-indigo-700 font-medium">อัตราคำนวณจากจำนวนอุบัติการณ์ IPD ของแต่ละ Error Type หารด้วยจำนวนวันนอน IPD ทั้งหมดในช่วงเวลาที่เลือก</p>
+                </div>
+                <div class="space-y-3">`;
+
+            rows.forEach((row, idx) => {
+                const pct = maxRate > 0 ? (row.rate / maxRate) * 100 : 0;
+                const [c1, c2] = colorPalette[idx % colorPalette.length];
+                html += `
+                    <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-2.5 min-w-0 flex-1">
+                                <span class="w-6 h-6 rounded-full bg-gradient-to-br ${c1} ${c2} text-white text-[10px] font-black flex items-center justify-center flex-shrink-0 shadow-sm">${idx + 1}</span>
+                                <p class="font-bold text-slate-800 text-sm truncate" title="${row.type}">${row.type}</p>
+                            </div>
+                            <div class="flex items-center gap-4 flex-shrink-0 ml-3">
+                                <div class="text-center">
+                                    <div class="text-[9px] text-slate-400 font-bold uppercase tracking-wide leading-none mb-0.5">เคส IPD</div>
+                                    <div class="text-lg font-black text-slate-700 num-font leading-none">${row.count}</div>
+                                </div>
+                                <div class="text-center min-w-[90px]">
+                                    <div class="text-[9px] text-indigo-500 font-bold uppercase tracking-wide leading-none mb-0.5">ต่อ 1,000 วันนอน</div>
+                                    <div class="text-lg font-black text-indigo-700 num-font leading-none">${totalIPDDays > 0 ? row.rate.toFixed(3) : '-'}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                            <div class="h-2 rounded-full bg-gradient-to-r ${c1} ${c2} transition-all duration-700" style="width:${pct.toFixed(1)}%"></div>
+                        </div>
+                    </div>`;
+            });
+
+            html += `</div>`;
+
+            if (totalIPDDays === 0) {
+                html += `
+                <div class="mt-4 p-3 bg-amber-50 rounded-xl border border-amber-200 flex items-start gap-2.5">
+                    <i class="fa-solid fa-triangle-exclamation text-amber-500 text-sm flex-shrink-0 mt-0.5"></i>
+                    <p class="text-xs text-amber-700 font-medium">ไม่มีข้อมูลจำนวนวันนอน IPD — แสดงเฉพาะจำนวนเคสแต่ละประเภท ไม่สามารถคำนวณอัตราได้</p>
+                </div>`;
+            }
+
+            body.innerHTML = html;
+            _showIPDRateModal();
+        }
+
+        function _showIPDRateModal() {
+            const modal = document.getElementById('ipdRateDrillDownModal');
+            const box   = document.getElementById('ipdRateDrillDownContentBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeIPDRateDrillDownModal() {
+            const modal = document.getElementById('ipdRateDrillDownModal');
+            const box   = document.getElementById('ipdRateDrillDownContentBox');
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        /* ══════════════════════════════════════════
            AI AUTO-FILL FORM (ฟีเจอร์ผู้ช่วยกรอกข้อมูลอัตโนมัติแบบ Rule-Based)
         ══════════════════════════════════════════ */
         function autoFillTypeError() {
@@ -4009,6 +4520,40 @@
         /* ══════════════════════════════════════════
            AI SUMMARY — Gemini API
         ══════════════════════════════════════════ */
+        function getAIFilteredData() {
+            let data = [...allData];
+            if (aiFilterDateStart || aiFilterDateEnd) {
+                data = data.filter(row => {
+                    if (!row._dateObj || row._dateObj.getTime() === 0) return false;
+                    const d = new Date(row._dateObj); d.setHours(0, 0, 0, 0);
+                    if (aiFilterDateStart) { const s = new Date(aiFilterDateStart); s.setHours(0,0,0,0); if (d < s) return false; }
+                    if (aiFilterDateEnd)   { const e = new Date(aiFilterDateEnd);   e.setHours(23,59,59,999); if (d > e) return false; }
+                    return true;
+                });
+            }
+            if (aiFilterLocation !== 'all') {
+                data = data.filter(row => (row['Incident_Location'] || '').toString().trim() === aiFilterLocation);
+            }
+            return data;
+        }
+
+        function updateAIFilterCount() {
+            const data = getAIFilteredData();
+            const el = document.getElementById('aiFilterCount');
+            if (el) el.innerText = `${data.length.toLocaleString()} รายการ`;
+        }
+
+        function resetAIFilter() {
+            if (fpAiStart) fpAiStart.clear();
+            if (fpAiEnd)   fpAiEnd.clear();
+            aiFilterDateStart = null;
+            aiFilterDateEnd   = null;
+            aiFilterLocation  = 'all';
+            const locSel = document.getElementById('aiLocationFilter');
+            if (locSel) locSel.value = 'all';
+            updateAIFilterCount();
+        }
+
         function loadAISettings() {
             const key = localStorage.getItem('gemini_api_key') || '';
             const model = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
@@ -4097,8 +4642,9 @@
                 showMessage('ยังไม่ได้ตั้งค่า API Key', 'กรุณากรอก Gemini API Key และกด "บันทึกการตั้งค่า" ก่อนใช้งาน', 'error');
                 return;
             }
-            if(!filteredData || filteredData.length === 0) {
-                showMessage('ไม่มีข้อมูล', 'ยังไม่มีข้อมูลใน Dashboard กรุณารีเฟรชข้อมูลก่อน', 'error');
+            const aiData = getAIFilteredData();
+            if(!aiData || aiData.length === 0) {
+                showMessage('ไม่มีข้อมูล', 'ไม่พบข้อมูลในช่วงเวลาที่เลือก กรุณาปรับตัวกรองหรือรีเฟรชข้อมูลก่อน', 'error');
                 return;
             }
 
@@ -4111,36 +4657,36 @@
             const _pct  = (n, t) => t > 0 ? (n/t*100).toFixed(1)+'%' : '0%';
 
             /* basic */
-            const total   = filteredData.length;
-            const highSev = filteredData.filter(r => ['E','F','G','H','I'].includes((r['Severity_Level']||'').toUpperCase())).length;
-            const opd     = filteredData.filter(r => (r['Department_Type']||'').toUpperCase()==='OPD').length;
-            const ipd     = filteredData.filter(r => (r['Department_Type']||'').toUpperCase()==='IPD').length;
-            const had     = filteredData.filter(r => (r['Drug_Category']||'').toUpperCase().includes('HAD')).length;
+            const total   = aiData.length;
+            const highSev = aiData.filter(r => ['E','F','G','H','I'].includes((r['Severity_Level']||'').toUpperCase())).length;
+            const opd     = aiData.filter(r => (r['Department_Type']||'').toUpperCase()==='OPD').length;
+            const ipd     = aiData.filter(r => (r['Department_Type']||'').toUpperCase()==='IPD').length;
+            const had     = aiData.filter(r => (r['Drug_Category']||'').toUpperCase().includes('HAD')).length;
 
             /* severity A–I */
-            const sevMap  = _countBy(filteredData, 'Severity_Level');
+            const sevMap  = _countBy(aiData, 'Severity_Level');
             const sevRows = ['A','B','C','D','E','F','G','H','I']
                 .filter(k => sevMap[k])
                 .map(k => `  ระดับ ${k}: ${sevMap[k]} ราย (${_pct(sevMap[k],total)})`).join('\n');
 
             /* error type top 8 */
-            const errMap  = _countBy(filteredData, 'Analysis_Error_Type');
+            const errMap  = _countBy(aiData, 'Analysis_Error_Type');
             const errRows = _topN(errMap, 8)
                 .map(([k,v],i) => `  ${i+1}. ${k}: ${v} ราย (${_pct(v,total)})`).join('\n');
 
             /* location top 6 */
-            const locMap  = _countBy(filteredData, 'Incident_Location');
+            const locMap  = _countBy(aiData, 'Incident_Location');
             const locRows = _topN(locMap, 6)
                 .map(([k,v],i) => `  ${i+1}. ${k}: ${v} ราย (${_pct(v,total)})`).join('\n');
 
             /* sub-type top 5 */
-            const subMap  = _countBy(filteredData, 'Error_Sub_Type');
+            const subMap  = _countBy(aiData, 'Error_Sub_Type');
             const subRows = _topN(subMap, 5)
                 .map(([k,v],i) => `  ${i+1}. ${k}: ${v} ราย`).join('\n');
 
             /* monthly trend last 6 months */
             const mMap = {};
-            filteredData.forEach(r => {
+            aiData.forEach(r => {
                 if(r._dateObj && r._dateObj.getTime()) {
                     const ym = `${r._dateObj.getFullYear()}-${String(r._dateObj.getMonth()+1).padStart(2,'0')}`;
                     mMap[ym] = (mMap[ym]||0)+1;
@@ -4149,15 +4695,39 @@
             const mRows = Object.entries(mMap).sort((a,b)=>a[0].localeCompare(b[0]))
                 .slice(-6).map(([m,c])=>`  ${m}: ${c} ราย`).join('\n');
 
-            /* rates & resolve from DOM */
-            const rateOPD    = document.getElementById('kpiRateOPD')?.innerText || '-';
-            const rateIPD    = document.getElementById('kpiRateIPD')?.innerText || '-';
-            const resolvedPct = document.getElementById('kpiResolvedPercent')?.innerText || '-';
-            const resolvedN   = document.getElementById('kpiResolvedCount')?.innerText || '-';
-            const pendingN    = document.getElementById('kpiPendingCount')?.innerText || '-';
+            /* compute rates from aiData's months */
+            const aiActiveMonths = Object.keys(mMap);
+            let aiOPDVisits = 0, aiIPDDays = 0;
+            monthlyStatsData.forEach(s => {
+                if (aiActiveMonths.length === 0 || aiActiveMonths.includes(s._month)) {
+                    aiOPDVisits += s._opd;
+                    aiIPDDays  += s._ipd;
+                }
+            });
+            const rateOPD = aiOPDVisits > 0 ? ((opd / aiOPDVisits) * 1000).toFixed(2) : '-';
+            const rateIPD = aiIPDDays  > 0 ? ((ipd / aiIPDDays)  * 1000).toFixed(2) : '-';
+
+            /* resolved / pending from aiData */
+            let aiResolved = 0, aiPending = 0;
+            aiData.forEach(r => {
+                const lv = classifyResolutionLevel(r);
+                if (lv === 'unit' || lv === 'cross' || lv === 'ptc') aiResolved++;
+                else aiPending++;
+            });
+            const resolvedN   = aiResolved.toLocaleString();
+            const pendingN    = aiPending.toLocaleString();
+            const resolvedPct = total > 0 ? Math.round((aiResolved / total) * 100) + '%' : '0%';
+
+            /* date range label for prompt context */
+            const fmtDate = d => d ? `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}` : null;
+            const dateRangeLabel = (aiFilterDateStart || aiFilterDateEnd)
+                ? `${fmtDate(aiFilterDateStart) || 'เริ่มต้น'} – ${fmtDate(aiFilterDateEnd) || 'ปัจจุบัน'}`
+                : 'ข้อมูลทั้งหมดในระบบ';
+            const locationLabel = aiFilterLocation !== 'all' ? aiFilterLocation : 'ทุกสถานที่';
 
             const prompt = `คุณเป็นเภสัชกรผู้เชี่ยวชาญด้านความปลอดภัยของผู้ป่วยและบริหารความเสี่ยงทางยา
 โปรดวิเคราะห์ข้อมูลความคลาดเคลื่อนทางยา (Medication Error) ของโรงพยาบาลกุดจับ จังหวัดอุดรธานี
+ช่วงเวลาที่วิเคราะห์: ${dateRangeLabel} | สถานที่: ${locationLabel}
 
 ═══════════════════════════════
 📊 KPI หลัก
