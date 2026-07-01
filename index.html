@@ -792,7 +792,8 @@
                         <canvas id="analysisSubtypeChart"></canvas>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 pt-8 border-t border-slate-100">
+                    <div class="overflow-x-auto pb-2 pt-8 border-t border-slate-100 -mx-1 px-1">
+                    <div class="grid gap-6 pt-0" style="grid-template-columns: repeat(4, minmax(220px, 1fr)); min-width: 900px;">
                         <div class="bg-slate-50/50 rounded-2xl p-5 border border-slate-100 hover:shadow-md transition duration-300">
                             <h4 class="text-sm font-bold text-slate-800 mb-5 flex items-center">
                                 <div class="w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 shadow-sm border border-indigo-200/50">
@@ -833,8 +834,9 @@
                             <div id="topDrugAdminList" class="space-y-3 max-h-[320px] overflow-y-auto pr-2"></div>
                         </div>
                     </div>
+                    </div><!-- /overflow-x-auto -->
                 </div>
-                
+
                 <div class="h-8"></div>
             </div>
 
@@ -1166,6 +1168,19 @@
                                 รายละเอียดอุบัติการณ์ (Incident Details)
                             </h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pl-2 sm:pl-10">
+                                <div class="md:col-span-2">
+                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2 sm:gap-0">
+                                        <label class="block text-sm font-bold text-slate-700">คำอธิบายเหตุการณ์ (บรรยายสั้นๆ) <span class="text-danger">*</span></label>
+                                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200 shadow-sm"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Auto-categorize</span>
+                                    </div>
+                                    <textarea id="formDescription" onblur="autoFillTypeError()" required rows="3" placeholder="อธิบายเหตุการณ์ที่เกิดขึ้นโดยสังเขป... (ระบบจะคัดแยกประเภทให้อัตโนมัติเมื่อพิมพ์เสร็จ)" class="form-input resize-none placeholder-slate-400 transition-colors"></textarea>
+                                </div>
+
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">การแก้ไขเบื้องต้น (บรรยายสั้นๆ) <span class="text-danger">*</span></label>
+                                    <textarea id="formInitialManagement" required rows="2" placeholder="อธิบายการแก้ไขหรือการจัดการเบื้องต้นที่ได้ทำไปแล้ว..." class="form-input resize-none placeholder-slate-400"></textarea>
+                                </div>
+
                                 <div>
                                     <label class="block text-sm font-bold text-slate-700 mb-2">ประเภท Error <span class="text-danger">*</span></label>
                                     <select id="formErrorType" required class="form-input cursor-pointer" onchange="updateSubTypes()">
@@ -1187,25 +1202,13 @@
                                     </div>
                                     <div>
                                         <label class="block text-sm font-bold text-slate-700 mb-2 flex items-center">
-                                            ยาที่เกี่ยวข้อง (2) 
+                                            ยาที่เกี่ยวข้อง (2)
                                             <span class="text-[10px] font-bold text-slate-500 ml-2 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">กรณี LASA / สลับยา</span>
                                         </label>
                                         <select id="formDrug2" class="form-input cursor-pointer font-medium">
                                             <option value="">-- เลือกยาที่หยิบผิด / จ่ายผิดไปแทน --</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="md:col-span-2">
-                                    <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2 sm:gap-0">
-                                        <label class="block text-sm font-bold text-slate-700">คำอธิบายเหตุการณ์ (บรรยายสั้นๆ) <span class="text-danger">*</span></label>
-                                        <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-md border border-slate-200 shadow-sm"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Auto-categorize</span>
-                                    </div>
-                                    <textarea id="formDescription" onblur="autoFillTypeError()" required rows="3" placeholder="อธิบายเหตุการณ์ที่เกิดขึ้นโดยสังเขป... (ระบบจะคัดแยกประเภทให้อัตโนมัติเมื่อพิมพ์เสร็จ)" class="form-input resize-none placeholder-slate-400 transition-colors"></textarea>
-                                </div>
-
-                                <div class="md:col-span-2">
-                                    <label class="block text-sm font-bold text-slate-700 mb-2">การแก้ไขเบื้องต้น (บรรยายสั้นๆ) <span class="text-danger">*</span></label>
-                                    <textarea id="formInitialManagement" required rows="2" placeholder="อธิบายการแก้ไขหรือการจัดการเบื้องต้นที่ได้ทำไปแล้ว..." class="form-input resize-none placeholder-slate-400"></textarea>
                                 </div>
 
                                 <!-- ระบบประเมินระดับความรุนแรงอัตโนมัติ (NCC MERP) -->
@@ -1631,6 +1634,25 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Error Type -->
+                    <div class="mt-3 relative z-10">
+                        <label class="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest mb-2" style="color:#7c3aed">
+                            <i class="fa-solid fa-tags"></i> ประเภท Error (Error Type)
+                        </label>
+                        <div class="relative">
+                            <select id="aiErrorTypeFilter"
+                                    onchange="aiFilterErrorType=this.value; updateAIFilterCount()"
+                                    class="w-full px-3 pr-8 py-2.5 text-sm rounded-xl font-medium cursor-pointer appearance-none transition"
+                                    style="border:1.5px solid #ddd6fe;background:#fff;color:#312e81;outline:none"
+                                    onfocus="this.style.borderColor='#7c3aed';this.style.boxShadow='0 0 0 3px rgba(124,58,237,.12)'"
+                                    onblur="this.style.borderColor='#ddd6fe';this.style.boxShadow='none'">
+                                <option value="all">ทั้งหมด (All Error Types)</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-3 flex items-center pointer-events-none">
+                                <i class="fa-solid fa-chevron-down text-[9px]" style="color:#8b5cf6"></i>
+                            </div>
+                        </div>
+                    </div>
                     <!-- hint -->
                     <p class="text-[11px] mt-3 relative z-10 flex items-center gap-1.5" style="color:#a78bfa">
                         <i class="fa-solid fa-circle-info"></i>
@@ -1985,6 +2007,31 @@
         </div>
     </div>
 
+    <!-- Drug Drill-Down Modal (เจาะลึกยารายตัว) -->
+    <div id="drugDrillDownModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-300 p-4 sm:p-6" onclick="if(event.target===this) closeDrugDrillDownModal()">
+        <div class="bg-white rounded-2xl w-full max-w-2xl max-h-[88vh] shadow-2xl transform scale-95 transition-transform duration-300 flex flex-col" id="drugDrillDownContentBox">
+            <!-- Header -->
+            <div class="flex items-center justify-between p-5 rounded-t-2xl flex-shrink-0"
+                 style="background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#60a5fa 100%)">
+                <div class="flex items-center gap-4 min-w-0 flex-1">
+                    <div class="w-12 h-12 rounded-xl bg-white/15 text-white flex items-center justify-center shadow-sm border border-white/20 flex-shrink-0">
+                        <i class="fa-solid fa-pills text-xl"></i>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                        <h3 class="text-base font-bold text-white leading-tight truncate" id="drugDrillDownTitle">รายละเอียดเหตุการณ์</h3>
+                        <p class="text-sm font-semibold text-blue-200 mt-0.5" id="drugDrillDownSubtitle">กำลังโหลด...</p>
+                    </div>
+                </div>
+                <button onclick="closeDrugDrillDownModal()" class="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white hover:bg-white/25 transition border border-white/20 flex-shrink-0 ml-3">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <!-- Body -->
+            <div class="p-5 md:p-6 overflow-y-auto flex-1 bg-slate-50" id="drugDrillDownBody">
+            </div>
+        </div>
+    </div>
+
     <!-- ============================================== -->
     <!-- TOC PANEL (สารบัญด้านขวา) -->
     <!-- ============================================== -->
@@ -2033,16 +2080,18 @@
         let fpDbStart, fpDbEnd, dbDateStart = null, dbDateEnd = null;
         let fpAiStart, fpAiEnd, aiFilterDateStart = null, aiFilterDateEnd = null;
         let aiFilterLocation = 'all';
+        let aiFilterErrorType = 'all';
         let dbErrorTypeFilter = 'all';
         let dbMgmtLevelFilter = 'all';
         let dbDisplayLimit = 20;
         let dbLocationFilter = 'all';
         let currentAnalysisType = ''; 
         let currentAnalysisLimit = '5';
-        let choicesDrug1 = null; 
-        let choicesDrug2 = null; 
-        let choicesErrorType = null; 
-        let choicesErrorSubType = null; 
+        let choicesDrug1 = null;
+        let choicesDrug2 = null;
+        let choicesErrorType = null;
+        let choicesErrorSubType = null;
+        let _drugListCache = [];
 
         // ---------------------------------------------------------
         // Mock Data Function 
@@ -2498,9 +2547,21 @@
                 dbEtSel.value = dbErrorTypeFilter;
             }
 
+            // Populate AI Error Type filter dropdown
+            const aiEtSel = document.getElementById('aiErrorTypeFilter');
+            if (aiEtSel) {
+                const types = new Set();
+                allData.forEach(row => { if (row['Error_Type']) types.add(row['Error_Type'].toString().trim()); });
+                aiEtSel.innerHTML = '<option value="all">ทั้งหมด (All Error Types)</option>';
+                Array.from(types).sort().forEach(t => {
+                    aiEtSel.innerHTML += `<option value="${t}">${t}</option>`;
+                });
+                aiEtSel.value = aiFilterErrorType;
+            }
+
             updateAIFilterCount();
         }
-        
+
         function populateErrorTypeDropdown(configList) {
             const typeSelect = document.getElementById('formErrorType');
             if (!typeSelect) return;
@@ -3419,6 +3480,7 @@
         }
 
         function renderTopDrugLists(analysisData) {
+            _drugListCache = [];
             let titleText = currentAnalysisLimit === 'all' ? 'รายการทั้งหมด' : `Top ${currentAnalysisLimit}`;
             if(document.getElementById('titlePrescribing')) document.getElementById('titlePrescribing').innerText = titleText;
             if(document.getElementById('titlePreDisp')) document.getElementById('titlePreDisp').innerText = titleText;
@@ -3434,16 +3496,18 @@
                 return null;
             };
 
-            const updateList = (elementId, filterFn) => {
+            const updateList = (elementId, filterFn, listType) => {
                 const el = document.getElementById(elementId);
                 if (!el) return;
                 const filtered = analysisData.filter(filterFn);
-                const counts = {}; const categories = {}; 
-                
+                const counts = {}; const categories = {}; const incidentsByDrug = {};
+
                 filtered.forEach(row => {
                     const pair = getDrugPair(row);
                     if (pair) {
                         counts[pair] = (counts[pair] || 0) + 1;
+                        if (!incidentsByDrug[pair]) incidentsByDrug[pair] = [];
+                        incidentsByDrug[pair].push(row);
                         const currentCat = categories[pair] || '';
                         const newCat = (row['Drug_Category'] || '').toUpperCase();
                         if (newCat.includes('HAD')) categories[pair] = 'HAD';
@@ -3468,9 +3532,12 @@
                     
                     const drugName = item[0];
                     const cat = categories[drugName] || '';
-                    let textColorClass = 'text-slate-800'; 
-                    if (cat.includes('HAD')) textColorClass = 'text-red-600 font-bold'; 
-                    else if (cat.includes('LASA')) textColorClass = 'text-amber-600 font-bold'; 
+                    let textColorClass = 'text-slate-800';
+                    if (cat.includes('HAD')) textColorClass = 'text-red-600 font-bold';
+                    else if (cat.includes('LASA')) textColorClass = 'text-amber-600 font-bold';
+
+                    const cacheIdx = _drugListCache.length;
+                    _drugListCache.push({ drugName, listType, incidents: (incidentsByDrug[drugName] || []) });
 
                     html += `
                         <div class="flex items-center justify-between bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md hover:-translate-y-0.5">
@@ -3478,7 +3545,13 @@
                                 <span class="flex-shrink-0 w-7 h-7 rounded-lg ${rankColor} border flex items-center justify-center text-xs font-bold mr-3 num-font">${idx + 1}</span>
                                 <span class="text-sm font-semibold ${textColorClass} line-clamp-2 leading-tight" title="${drugName}">${drugName}</span>
                             </div>
-                            <span class="flex-shrink-0 text-sm font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg border border-brand-100 num-font">${item[1]}</span>
+                            <button onclick="openDrugDrillDownModal(${cacheIdx})"
+                                    class="group flex-shrink-0 flex items-center gap-1.5 text-sm font-bold text-brand-700 bg-brand-50 px-2.5 py-1 rounded-lg border border-brand-100 num-font hover:bg-brand-100 hover:border-brand-300 hover:text-brand-900 transition-all duration-200 cursor-pointer active:scale-95"
+                                    title="คลิกเพื่อดูรายละเอียดเหตุการณ์">
+                                <i class="fa-solid fa-magnifying-glass text-[9px] opacity-40 group-hover:opacity-100 transition-opacity duration-200"></i>
+                                <span class="num-font">${item[1]}</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[8px] opacity-0 group-hover:opacity-100 group-hover:-translate-y-px group-hover:translate-x-px transition-all duration-200"></i>
+                            </button>
                         </div>
                     `;
                 });
@@ -3488,16 +3561,16 @@
             updateList('topDrugPrescribingList', r => {
                 const t = (r['Error_Type'] || '').toLowerCase();
                 return t.includes('prescribing') || t.includes('การสั่งใช้ยา');
-            });
-            updateList('topDrugPreDispList', r => (r['Error_Type'] || '').toLowerCase().includes('pre-dispensing'));
+            }, 'Prescribing');
+            updateList('topDrugPreDispList', r => (r['Error_Type'] || '').toLowerCase().includes('pre-dispensing'), 'Pre-dispensing');
             updateList('topDrugDispList', r => {
                 const t = (r['Error_Type'] || '').toLowerCase();
                 return t.includes('dispensing') && !t.includes('pre-dispensing');
-            });
+            }, 'Dispensing');
             updateList('topDrugAdminList', r => {
                 const t = (r['Error_Type'] || '').toLowerCase();
                 return t.includes('administration') || t.includes('บริหารยา');
-            });
+            }, 'Administration');
         }
 
         // ---------------------------------------------------------
@@ -4473,47 +4546,208 @@
         }
 
         /* ══════════════════════════════════════════
+           DRUG DRILL-DOWN MODAL (เจาะลึกยารายตัว)
+        ══════════════════════════════════════════ */
+        function openDrugDrillDownModal(cacheIdx) {
+            const entry = _drugListCache[cacheIdx];
+            if (!entry) return;
+            const { drugName, listType, incidents } = entry;
+            const sorted = [...incidents].sort((a, b) => b._dateObj - a._dateObj);
+
+            document.getElementById('drugDrillDownTitle').innerText = drugName;
+            document.getElementById('drugDrillDownSubtitle').innerText =
+                `${listType} · พบทั้งหมด ${sorted.length} เคส`;
+
+            const body = document.getElementById('drugDrillDownBody');
+
+            if (sorted.length === 0) {
+                body.innerHTML = `
+                    <div class="flex flex-col items-center justify-center py-12 text-center">
+                        <div class="w-20 h-20 bg-slate-50 text-slate-400 rounded-full flex items-center justify-center mb-5 text-4xl border border-slate-200">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-700">ไม่พบข้อมูลเหตุการณ์</h4>
+                    </div>`;
+                _showDrugDrillDownModal();
+                return;
+            }
+
+            const getSevCls = sev => {
+                if (['A','B','C'].includes(sev)) return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+                if (['D','E','F'].includes(sev)) return 'bg-amber-50 text-amber-700 border-amber-200';
+                if (['G','H','I'].includes(sev)) return 'bg-red-50 text-red-700 border-red-200';
+                return 'bg-slate-100 text-slate-600 border-slate-200';
+            };
+
+            let html = '<div class="space-y-3">';
+            sorted.forEach((row, idx) => {
+                const sev     = (row['Severity_Level'] || '-').toString().trim().toUpperCase();
+                const date    = (row['Incident_Date']  || '-').toString();
+                const loc     = (row['Incident_Location'] || '-').toString().trim();
+                const errType = (row['Error_Type'] || '-').toString().trim();
+                const subType = (row['Error_Sub_Type'] || '').toString().trim();
+                const details = (row['Incident_Details'] || '').toString().trim();
+                const d2      = (row['Drug_Name2'] || '').toString().trim();
+                const sevCls  = getSevCls(sev);
+                const safeDetails = details.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+                html += `
+                    <div class="bg-white rounded-xl border border-slate-100 p-4 shadow-sm hover:shadow-md transition-all duration-200">
+                        <div class="flex flex-wrap items-center gap-2 mb-2">
+                            <span class="w-6 h-6 rounded-full bg-slate-100 text-slate-500 text-[10px] font-black flex items-center justify-center flex-shrink-0 num-font border border-slate-200">${idx + 1}</span>
+                            <span class="px-2.5 py-0.5 rounded-lg text-xs font-black border num-font ${sevCls}">Level ${sev}</span>
+                            <span class="text-[11px] font-semibold text-slate-500 num-font"><i class="fa-regular fa-calendar mr-1"></i>${date}</span>
+                            <span class="text-[11px] font-semibold text-slate-500"><i class="fa-solid fa-location-dot mr-1 text-slate-400 text-[10px]"></i>${loc}</span>
+                        </div>
+                        <p class="text-sm font-bold text-slate-800 leading-snug">
+                            ${errType}${subType ? `<span class="text-slate-400 font-medium text-xs ml-1">· ${subType}</span>` : ''}
+                        </p>
+                        ${safeDetails ? `<div class="mt-2 text-[12px] text-slate-600 leading-relaxed bg-slate-50 rounded-lg px-3 py-2 border border-slate-100 line-clamp-3 hover:line-clamp-none transition-all cursor-default">${safeDetails}</div>` : ''}
+                        ${(d2 && d2 !== '-') ? `<div class="mt-2 flex items-center gap-1.5"><span class="text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded border border-orange-100"><i class="fa-solid fa-right-left mr-1"></i>สลับกับ: ${d2}</span></div>` : ''}
+                    </div>`;
+            });
+            html += '</div>';
+            body.innerHTML = html;
+            _showDrugDrillDownModal();
+        }
+
+        function _showDrugDrillDownModal() {
+            const modal = document.getElementById('drugDrillDownModal');
+            const box   = document.getElementById('drugDrillDownContentBox');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                box.classList.remove('scale-95');
+                box.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeDrugDrillDownModal() {
+            const modal = document.getElementById('drugDrillDownModal');
+            const box   = document.getElementById('drugDrillDownContentBox');
+            modal.classList.add('opacity-0');
+            box.classList.remove('scale-100');
+            box.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        /* ══════════════════════════════════════════
            AI AUTO-FILL FORM (ฟีเจอร์ผู้ช่วยกรอกข้อมูลอัตโนมัติแบบ Rule-Based)
         ══════════════════════════════════════════ */
         function autoFillTypeError() {
             const input = document.getElementById('formDescription').value.trim().toLowerCase();
-            if(!input) return;
+            if (!input) return;
 
-            // 🌟 ระบบ Rule-Based Triage (วิเคราะห์จาก Keyword ทันที 0.001 วินาที ไม่ต้องใช้ API)
-            const rules = {
-                'Prescribing': ['สั่ง', 'สั่งจ่าย', 'สั่งผิด', 'ลายมือ', 'order', 'prescription', 'dose ผิด', 'frequency ผิด', 'interaction', 'allergy', 'renal'],
-                'Transcribing': ['คัดลอก', 'คีย์ผิด', 'ไม่คีย์', 'ลอก', 'transcription', 'copy', 'his', 'อ่านลายมือผิด', 'ไม่คัดลอก'],
+            const typeSelect    = document.getElementById('formErrorType');
+            const subTypeSelect = document.getElementById('formErrorSubType');
+            const typeAlreadySet    = !!(typeSelect.value);
+            const subTypeAlreadySet = !!(subTypeSelect.value);
+            if (typeAlreadySet && subTypeAlreadySet) return;
+
+            // ── ตาราง keyword → Error Type ──
+            const typeRules = {
+                'Prescribing':    ['สั่ง', 'สั่งจ่าย', 'สั่งผิด', 'ลายมือ', 'order', 'prescription', 'dose ผิด', 'frequency ผิด', 'interaction', 'allergy', 'renal'],
+                'Transcribing':   ['คัดลอก', 'คีย์ผิด', 'ไม่คีย์', 'ลอก', 'transcription', 'copy', 'his', 'อ่านลายมือผิด', 'ไม่คัดลอก'],
                 'Pre-dispensing': ['จัด', 'จัดผิด', 'ไม่จัดยา', 'ซองเปล่า', 'ตะกร้า', 'ติดฉลาก', 'เตรียมยา', 'ผสมยา', 'compounding', 'คำนวณผิด', 'lasa', 'ความแรงผิด'],
-                'Dispensing': ['จ่าย', 'จ่ายผิด', 'ส่งมอบ', 'ยื่นให้', 'อธิบายวิธีใช้', 'dispense', 'ห้องยา', 'หยิบยาผิด'],
+                'Dispensing':     ['จ่าย', 'จ่ายผิด', 'ส่งมอบ', 'ยื่นให้', 'อธิบายวิธีใช้', 'dispense', 'ห้องยา', 'หยิบยาผิด'],
                 'Administration': ['ฉีด', 'ให้ยา', 'บริหารยา', 'พยาบาลให้', 'ลืมให้ยา', 'infusion', 'drip', 'ผิดเวลา', 'ผิด route', 'ผิดทาง']
             };
 
+            // ── ตาราง keyword → hint สำหรับค้นหา Sub-type ที่ตรงที่สุดในรายการ dropdown ──
+            const subTypeRules = {
+                'Prescribing': [
+                    { kw: ['dose ผิด', 'overdose', 'underdose', 'ขนาดยา', 'ขนาดผิด'],         hint: 'dose' },
+                    { kw: ['ผิดคน', 'คนผิด', 'wrong patient', 'สั่งผิดคน'],                   hint: 'patient' },
+                    { kw: ['frequency', 'ความถี่', 'วันละผิด', 'ครั้งผิด'],                    hint: 'frequency' },
+                    { kw: ['interaction', 'ยาตีกัน', 'ปฏิกิริยา'],                            hint: 'interaction' },
+                    { kw: ['allergy', 'แพ้ยา', 'ประวัติแพ้'],                                 hint: 'allergy' },
+                    { kw: ['renal', 'ไตเสื่อม', 'ไตวาย', 'hepatic', 'ตับ'],                   hint: 'renal' },
+                    { kw: ['route ผิด', 'ทางผิด', 'wrong route'],                              hint: 'route' },
+                    { kw: ['ลืมสั่ง', 'ไม่สั่งยา', 'error of omission'],                      hint: 'omission' },
+                ],
+                'Transcribing': [
+                    { kw: ['ผิดคน', 'wrong patient', 'คีย์ผิดคน'],                             hint: 'patient' },
+                    { kw: ['ขนาด', 'dose', 'คีย์ขนาดผิด'],                                    hint: 'dose' },
+                    { kw: ['ลืมคัดลอก', 'ตกหล่น', 'ไม่คัดลอก', 'ไม่คีย์'],                   hint: 'omission' },
+                    { kw: ['คัดลอกผิด', 'อ่านลายมือผิด', 'คีย์ผิด', 'ลอกผิด'],               hint: 'transcription' },
+                ],
+                'Pre-dispensing': [
+                    { kw: ['ซองเปล่า', 'ไม่จัดยา', 'ตกหล่น', 'ขาดยา', 'ไม่ได้จัดยา'],       hint: 'ตกหล่น' },
+                    { kw: ['ความแรงผิด', 'strength ผิด', 'mg ผิด'],                            hint: 'ความแรง' },
+                    { kw: ['จำนวนผิด', 'เม็ดผิด', 'จำนวนเม็ด', 'เกินจำนวน'],                 hint: 'จำนวน' },
+                    { kw: ['ผิดตะกร้า', 'ตะกร้าผิด', 'จัดผิดคน'],                             hint: 'ตะกร้า' },
+                    { kw: ['lasa', 'ยาปน', 'ปนชนิด', 'จัดผิดชนิด'],                           hint: 'ปน' },
+                    { kw: ['ฉลาก', 'label ผิด', 'ติดฉลากผิด'],                                hint: 'label' },
+                    { kw: ['คำนวณผิด', 'คำนวณ', 'calculation'],                                hint: 'calculation' },
+                    { kw: ['เตรียมยา', 'ผสมยา', 'compounding', 'preparation'],                 hint: 'preparation' },
+                    { kw: ['จัดซ้ำ', 'จัดยาซ้ำ', 'duplicate'],                                hint: 'ซ้ำ' },
+                ],
+                'Dispensing': [
+                    { kw: ['จ่ายผิดคน', 'ผิดคน', 'wrong patient'],                            hint: 'patient' },
+                    { kw: ['จ่ายยาผิดชนิด', 'หยิบยาผิด', 'wrong drug', 'ยาผิดชนิด'],         hint: 'drug' },
+                    { kw: ['จ่ายผิดขนาด', 'dose ผิด', 'ความแรงผิด'],                          hint: 'dose' },
+                    { kw: ['จำนวนผิด', 'จ่ายไม่ครบ', 'จ่ายเกิน', 'quantity'],                 hint: 'quantity' },
+                    { kw: ['ฉลากผิด', 'label ผิด', 'ติดฉลากผิด'],                             hint: 'label' },
+                    { kw: ['อธิบายไม่ครบ', 'counseling', 'วิธีใช้ผิด', 'ไม่อธิบาย'],          hint: 'instruction' },
+                ],
+                'Administration': [
+                    { kw: ['ฉีดผิดคน', 'ให้ผิดคน', 'ผิดคน', 'wrong patient'],                hint: 'patient' },
+                    { kw: ['ยาผิดชนิด', 'ฉีดยาผิด', 'wrong drug', 'ให้ยาผิดชนิด'],           hint: 'drug' },
+                    { kw: ['ผิดขนาด', 'dose ผิด', 'ฉีดผิดขนาด'],                              hint: 'dose' },
+                    { kw: ['ผิดทาง', 'route ผิด', 'wrong route', 'ฉีดผิดทาง'],                hint: 'route' },
+                    { kw: ['ผิดเวลา', 'เวลาผิด', 'ให้ช้า', 'ให้เร็ว'],                       hint: 'time' },
+                    { kw: ['rate ผิด', 'drip rate', 'infusion rate', 'หยดเร็ว', 'หยดช้า'],    hint: 'rate' },
+                    { kw: ['ลืมให้ยา', 'ไม่ได้ให้ยา', 'omission', 'ลืม'],                    hint: 'omission' },
+                ],
+            };
+
+            // หา Error Type ที่ได้คะแนนสูงสุด
             let bestMatch = '';
             let maxScore = 0;
-
-            for (const [type, keywords] of Object.entries(rules)) {
+            for (const [type, keywords] of Object.entries(typeRules)) {
                 let score = 0;
-                keywords.forEach(kw => {
-                    if (input.includes(kw.toLowerCase())) {
-                        score++;
-                    }
-                });
-                if (score > maxScore) {
-                    maxScore = score;
-                    bestMatch = type;
-                }
+                keywords.forEach(kw => { if (input.includes(kw.toLowerCase())) score++; });
+                if (score > maxScore) { maxScore = score; bestMatch = type; }
+            }
+            if (!bestMatch) return;
+
+            // หา Sub-type hint ที่ได้คะแนนสูงสุด
+            let bestHint = '';
+            let maxSubScore = 0;
+            for (const { kw, hint } of (subTypeRules[bestMatch] || [])) {
+                let score = 0;
+                kw.forEach(k => { if (input.includes(k.toLowerCase())) score++; });
+                if (score > maxSubScore) { maxSubScore = score; bestHint = hint; }
             }
 
-            if (bestMatch) {
-                try {
-                    const typeSelect = document.getElementById('formErrorType');
-                    if (!typeSelect.value || typeSelect.value === '') {
-                        choicesErrorType.setChoiceByValue(bestMatch);
-                        updateSubTypes(); 
-                    }
-                } catch(e) {
-                    console.warn("Rule matched but type not found in dropdown:", bestMatch);
+            try {
+                // ตั้งค่า Error Type ถ้ายังไม่ได้เลือก
+                if (!typeAlreadySet) {
+                    choicesErrorType.setChoiceByValue(bestMatch);
+                    updateSubTypes(); // สร้าง dropdown ความเสี่ยงย่อยใหม่
                 }
+
+                // ตั้งค่าความเสี่ยงย่อย ถ้ายังไม่ได้เลือกและมี hint
+                if (!subTypeAlreadySet && bestHint && choicesErrorSubType) {
+                    const hintLower = bestHint.toLowerCase();
+                    let bestSubOption = '';
+                    let bestSubScore  = 0;
+
+                    Array.from(subTypeSelect.options).forEach(opt => {
+                        if (!opt.value) return;
+                        const optLower = (opt.text + ' ' + opt.value).toLowerCase();
+                        const hintParts = hintLower.split(/[\s\/]+/).filter(p => p.length > 1);
+                        let score = hintParts.reduce((s, p) => s + (optLower.includes(p) ? 1 : 0), 0);
+                        if (score > bestSubScore) { bestSubScore = score; bestSubOption = opt.value; }
+                    });
+
+                    if (bestSubOption && bestSubScore > 0) {
+                        choicesErrorSubType.setChoiceByValue(bestSubOption);
+                        autoCheckPreventable();
+                    }
+                }
+            } catch (e) {
+                console.warn('autoFillTypeError:', e);
             }
         }
 
@@ -4534,6 +4768,9 @@
             if (aiFilterLocation !== 'all') {
                 data = data.filter(row => (row['Incident_Location'] || '').toString().trim() === aiFilterLocation);
             }
+            if (aiFilterErrorType !== 'all') {
+                data = data.filter(row => (row['Error_Type'] || '').toString().trim() === aiFilterErrorType);
+            }
             return data;
         }
 
@@ -4546,11 +4783,14 @@
         function resetAIFilter() {
             if (fpAiStart) fpAiStart.clear();
             if (fpAiEnd)   fpAiEnd.clear();
-            aiFilterDateStart = null;
-            aiFilterDateEnd   = null;
-            aiFilterLocation  = 'all';
+            aiFilterDateStart  = null;
+            aiFilterDateEnd    = null;
+            aiFilterLocation   = 'all';
+            aiFilterErrorType  = 'all';
             const locSel = document.getElementById('aiLocationFilter');
             if (locSel) locSel.value = 'all';
+            const etSel = document.getElementById('aiErrorTypeFilter');
+            if (etSel) etSel.value = 'all';
             updateAIFilterCount();
         }
 
@@ -4723,11 +4963,12 @@
             const dateRangeLabel = (aiFilterDateStart || aiFilterDateEnd)
                 ? `${fmtDate(aiFilterDateStart) || 'เริ่มต้น'} – ${fmtDate(aiFilterDateEnd) || 'ปัจจุบัน'}`
                 : 'ข้อมูลทั้งหมดในระบบ';
-            const locationLabel = aiFilterLocation !== 'all' ? aiFilterLocation : 'ทุกสถานที่';
+            const locationLabel  = aiFilterLocation  !== 'all' ? aiFilterLocation  : 'ทุกสถานที่';
+            const errorTypeLabel = aiFilterErrorType !== 'all' ? aiFilterErrorType : 'ทุกประเภท Error';
 
             const prompt = `คุณเป็นเภสัชกรผู้เชี่ยวชาญด้านความปลอดภัยของผู้ป่วยและบริหารความเสี่ยงทางยา
 โปรดวิเคราะห์ข้อมูลความคลาดเคลื่อนทางยา (Medication Error) ของโรงพยาบาลกุดจับ จังหวัดอุดรธานี
-ช่วงเวลาที่วิเคราะห์: ${dateRangeLabel} | สถานที่: ${locationLabel}
+ช่วงเวลาที่วิเคราะห์: ${dateRangeLabel} | สถานที่: ${locationLabel} | ประเภท Error: ${errorTypeLabel}
 
 ═══════════════════════════════
 📊 KPI หลัก
